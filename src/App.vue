@@ -14,6 +14,7 @@
     <v-content>
       <v-container grid-list-xs>
         <DataTable />
+        <NewItem v-model="newOpen" />
       </v-container>
     </v-content>
   </v-app>
@@ -22,9 +23,12 @@
 <script>
 import db from "../firebase";
 import DataTable from "./components/DataTable";
+import NewItem from "./components/NewItem";
 export default {
   name: "App",
-  components: { DataTable },
-  data: () => ({})
+  components: { DataTable, NewItem },
+  data: () => ({
+    newOpen: false
+  })
 };
 </script>

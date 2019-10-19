@@ -1,9 +1,15 @@
 <template>
   <div>
     <v-container grid-list-xs>
-      <ul>
-        <li v-for="(item, index) in items" :key="index">{{item.name}}</li>
-      </ul>
+      <v-data-table :headers="headers" :items="items" class="elevation-1">
+        <template slot="items" slot-scope="props">
+          <td>{{ props.item.key }}</td>
+          <td class="text-xs-right">{{ props.item.key }}</td>
+          <td class="text-xs-right">{{ props.item.key }}</td>
+          <td class="text-xs-right">{{ props.item.key }}</td>
+          <td class="text-xs-right">{{ props.item.key }}</td>
+        </template>
+      </v-data-table>
     </v-container>
   </div>
 </template>
@@ -32,7 +38,7 @@ export default {
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
-          console.log(doc.data());
+          this.items.push(doc.data());
         });
       });
   }
