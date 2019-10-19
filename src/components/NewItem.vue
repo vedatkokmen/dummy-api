@@ -1,13 +1,20 @@
 <template>
   <div>
-    <v-btn @click="isOpened =! isOpened" color="success">New</v-btn>
-    <v-form v-show="isOpened">
-      <v-text-field name="name" label="Name"></v-text-field>
-      <v-text-field name="cost" label="Cost"></v-text-field>
-      <v-text-field name="category" label="Category"></v-text-field>
-      <v-text-field name="desc" label="Description"></v-text-field>
-      <v-btn @submit="sendData()" type="submit" color="success">Save</v-btn>
-    </v-form>
+    <v-container grid-list-xs>
+      <v-btn @click="isOpened =! isOpened" class="mb-4" color="success">New</v-btn>
+      <v-form v-show="isOpened">
+        <v-card>
+          <v-card-title primary-title>New Item</v-card-title>
+          <v-text-field class="pa-6" v-model="newItem.name" name="name" label="Name"></v-text-field>
+          <v-text-field class="pa-6" v-model="newItem.cost" name="cost" label="Cost"></v-text-field>
+          <v-text-field class="pa-6" v-model="newItem.category" name="category" label="Category"></v-text-field>
+          <v-text-field class="pa-6" v-model="newItem.desc" name="desc" label="Description"></v-text-field>
+          <v-card-actions>
+            <v-btn @click.stop="sendData" color="primary">Save</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-form>
+    </v-container>
   </div>
 </template>
 
@@ -28,19 +35,10 @@ export default {
   },
   methods: {
     sendData() {
-      db.collection("dummy")
-        .add({
-          name: e.name.val(),
-          cost: e.cost.val(),
-          category: e.category.val(),
-          desc: e.desc.val()
-        })
-        .then(function(docRef) {
-          console.log("Document written with ID: ", docRef.id);
-        })
-        .catch(function(error) {
-          console.error("Error adding document: ", error);
-        });
+      db.collection("dummy").add(this.newItem);
+      alert("Added!");
+      this.isOpened = false;
+      this.$router.go(0);
     }
   }
 };

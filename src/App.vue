@@ -2,18 +2,16 @@
   <v-app>
     <v-app-bar app>
       <v-toolbar-title class="headline text-uppercase">
-        <span>Vuetify</span>
-        <span class="font-weight-light">MATERIAL DESIGN</span>
+        <span class="font-weight-light">FINANCE APP</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn text href="https://github.com/vuetifyjs/vuetify/releases/latest" target="_blank">
-        <span class="mr-2">Latest Release</span>
-      </v-btn>
     </v-app-bar>
 
     <v-content>
       <v-container grid-list-xs>
-        <DataTable />
+        <DataTable v-show="newOpen = true" />
+      </v-container>
+      <v-container grid-list-xs>
         <NewItem v-model="newOpen" />
       </v-container>
     </v-content>
