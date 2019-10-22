@@ -130,7 +130,7 @@ export default {
   },
   computed: {
     balance() {
-      return this.totalExpense - this.totalIncome;
+      return this.totalIncome - this.totalExpense;
     }
   }
 };
