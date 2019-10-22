@@ -8,16 +8,30 @@
               <v-card-title primary-title>
                 <div>
                   <h3 class="headline mb-0">Total Income</h3>
+                  <v-progress-circular
+                    rotate="180"
+                    size="100"
+                    width="15"
+                    :value="totalIncome / 1000"
+                    color="amber"
+                  >{{ 1000 }}</v-progress-circular>
                   <div class="display-2">{{totalIncome}} TL</div>
                 </div>
               </v-card-title>
             </v-card>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="4" justify-center align-center>
             <v-card>
               <v-card-title primary-title>
                 <div>
                   <h3 class="headline mb-0">Total Expense</h3>
+                  <v-progress-circular
+                    rotate="180"
+                    size="100"
+                    width="15"
+                    :value="totalExpense / 1000"
+                    color="pink"
+                  >{{ 1000 }}</v-progress-circular>
                   <div class="display-2">{{totalExpense}} TL</div>
                 </div>
               </v-card-title>
@@ -28,6 +42,13 @@
               <v-card-title primary-title>
                 <div>
                   <h3 class="headline mb-0">Balance</h3>
+                  <v-progress-circular
+                    rotate="180"
+                    size="100"
+                    width="15"
+                    :value="balance / 1000"
+                    color="blue"
+                  >{{ 1000 }}</v-progress-circular>
                   <div class="display-2">{{balance}} TL</div>
                 </div>
               </v-card-title>
