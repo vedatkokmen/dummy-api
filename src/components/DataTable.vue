@@ -4,7 +4,7 @@
       <v-container class="grey mb-2 lighten-5">
         <v-row>
           <v-col cols="4">
-            <v-card>
+            <v-card class="mx-auto">
               <v-card-title primary-title>
                 <div>
                   <h3 class="headline mb-0">Total Income</h3>
@@ -56,7 +56,14 @@
           </v-col>
         </v-row>
       </v-container>
-      <v-data-table :headers="headers" :items="items" class="elevation-1">
+      <v-data-table
+        item-key="name"
+        class="elevation-1"
+        :loading="loading"
+        loading-text="Loading... Please wait"
+        :headers="headers"
+        :items="items"
+      >
         <template slot="items" slot-scope="props">
           <td class="text-xs-right">{{ props.item.key }}</td>
         </template>
@@ -67,7 +74,9 @@
 
 <script>
 import db from "../../firebase";
+
 export default {
+  components: {},
   data() {
     return {
       headers: [
@@ -87,10 +96,15 @@ export default {
       isOpened: false,
       expenses: [],
       incomes: [],
-      dbRef: db.collection("dummy")
+      dbRef: db.collection("dummy"),
+      loading: true
     };
   },
   methods: {
+    load() {
+      this.loading = true;
+      setTimeout(() => (this.loading = false), 1000);
+    },
     getIncomes() {
       this.dbRef
         .where("isIncome", "==", true)
@@ -127,6 +141,7 @@ export default {
   },
   created() {
     this.getIncomes();
+    this.load();
   },
   computed: {
     balance() {

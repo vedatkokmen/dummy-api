@@ -2,14 +2,14 @@
   <v-app>
     <v-app-bar app>
       <v-toolbar-title class="headline text-uppercase">
-        <span class="font-weight-light">FINANCE APP</span>
+        <span class="font-weight-bold">MY</span>
+        <span class="font-weight-light">WALLET</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
     </v-app-bar>
-
     <v-content>
       <v-container grid-list-xs>
-        <DataTable v-show="newOpen = true" />
+        <DataTable v-model="toggle" />
       </v-container>
       <v-container grid-list-xs>
         <NewItem v-model="newOpen" />
@@ -26,7 +26,10 @@ export default {
   name: "App",
   components: { DataTable, NewItem },
   data: () => ({
-    newOpen: false
-  })
+    newOpen: false,
+    toggle: true,
+    loading: true
+  }),
+  methods: {}
 };
 </script>

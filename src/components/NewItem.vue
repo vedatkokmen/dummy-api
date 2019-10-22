@@ -1,10 +1,10 @@
 <template>
   <div>
     <v-container grid-list-xs>
-      <v-btn @click="isOpened =! isOpened" class="mb-4" color="success">New</v-btn>
+      <v-btn @click="createItem" class="mb-4" block color="success">New</v-btn>
       <v-form v-show="isOpened">
         <v-card>
-          <v-card-title primary-title>New Item</v-card-title>
+          <v-card-title class="display-2">New Item</v-card-title>
           <v-text-field class="pa-6" v-model="newItem.name" name="name" label="Name"></v-text-field>
           <v-text-field class="pa-6" v-model.number="newItem.cost" name="cost" label="Cost"></v-text-field>
           <v-text-field class="pa-6" v-model="newItem.category" name="category" label="Category"></v-text-field>
@@ -41,6 +41,9 @@ export default {
       alert("Added!");
       this.isOpened = false;
       this.$router.go(0);
+    },
+    createItem() {
+      this.isOpened = !this.isOpened;
     }
   }
 };
