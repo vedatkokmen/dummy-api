@@ -1,21 +1,46 @@
 <template>
   <div>
     <v-container grid-list-xs>
-      <v-btn @click="createItem" class="mb-4" block color="success">New</v-btn>
-      <v-form v-show="isOpened">
-        <v-card>
-          <v-card-title class="display-2">New Item</v-card-title>
-          <v-text-field class="pa-6" v-model="newItem.name" name="name" label="Name"></v-text-field>
-          <v-text-field class="pa-6" v-model.number="newItem.cost" name="cost" label="Cost"></v-text-field>
-          <v-text-field class="pa-6" v-model="newItem.category" name="category" label="Category"></v-text-field>
-          <v-text-field class="pa-6" v-model="newItem.desc" name="desc" label="Description"></v-text-field>
-          <v-card-actions>
-            <v-switch v-model="newItem.isIncome" label="Income"></v-switch>
-            <v-spacer></v-spacer>
-            <v-btn @click.stop="sendData" color="primary">Save</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-form>
+      <v-row justify="center">
+        <v-dialog v-model="dialog" persistent max-width="600px">
+          <template v-slot:activator="{ on }">
+            <v-btn color="primary" dark v-on="on">New Item</v-btn>
+          </template>
+          <v-card>
+            <v-card-title>
+              <span class="headline">New Item</span>
+            </v-card-title>
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col cols="12">
+                    <v-text-field v-model="newItem.name" label="Name" required></v-text-field>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field v-model.number="newItem.cost" label="Cost" required></v-text-field>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-select
+                      v-model="newItem.category"
+                      :items="['Ev', 'İş', 'Kişisel', 'Abonelik', 'Diğer']"
+                      label="Category"
+                      required
+                    ></v-select>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field v-model="newItem.desc" label="Description" required></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
+              <v-btn color="blue darken-3" text @click="sendData">Save</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-row>
     </v-container>
   </div>
 </template>
@@ -32,7 +57,8 @@ export default {
         category: "",
         desc: "",
         isIncome: false
-      }
+      },
+      dialog: false
     };
   },
   methods: {
@@ -40,10 +66,15 @@ export default {
       db.collection("dummy").add(this.newItem);
       alert("Added!");
       this.isOpened = false;
-      this.$router.go(0);
-    },
-    createItem() {
-      this.isOpened = !this.isOpened;
+      this.$emit("add", this.newItem);
+      this.dialog = false;
+      this.newItem = {
+        name: "",
+        cost: null,
+        category: "",
+        desc: "",
+        isIncome: false
+      };
     }
   }
 };

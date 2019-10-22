@@ -57,12 +57,13 @@
         </v-row>
       </v-container>
       <v-data-table
-        item-key="name"
+        item-key="item.name"
         class="elevation-1"
         :loading="loading"
         loading-text="Loading... Please wait"
         :headers="headers"
         :items="items"
+        @click:row="onClickItem"
       >
         <template slot="items" slot-scope="props">
           <td class="text-xs-right">{{ props.item.key }}</td>
@@ -76,6 +77,7 @@
 import db from "../../firebase";
 
 export default {
+  props: ["items", "loading"],
   components: {},
   data() {
     return {
@@ -90,62 +92,33 @@ export default {
         { text: "Category", value: "category" },
         { text: "Description", value: "desc" }
       ],
-      items: [],
-      totalExpense: null,
-      totalIncome: null,
       isOpened: false,
       expenses: [],
-      incomes: [],
-      dbRef: db.collection("dummy"),
-      loading: true
+      dbRef: db.collection("dummy")
     };
   },
-  methods: {
-    load() {
-      this.loading = true;
-      setTimeout(() => (this.loading = false), 1000);
-    },
-    getIncomes() {
-      this.dbRef
-        .where("isIncome", "==", true)
-        .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            this.incomes.push(doc.data());
-          });
-        });
-    },
-    totalExpenses() {
-      let total = this.items.reduce((currentTotal, item) => {
-        return item.cost + currentTotal;
-      }, 0);
-      this.totalExpense = total;
-    },
-    totalIncomes() {
-      let total = this.incomes.reduce((currentTotal, item) => {
-        return item.cost + currentTotal;
-      }, 0);
-      this.totalIncome = total;
-    }
-  },
-  beforeMount() {
-    this.dbRef.get().then(querySnapshot => {
-      querySnapshot.forEach(doc => {
-        this.items.push(doc.data());
-      });
-    });
-  },
-  updated() {
-    this.totalExpenses();
-    this.totalIncomes();
-  },
-  created() {
-    this.getIncomes();
-    this.load();
-  },
+
   computed: {
     balance() {
       return this.totalIncome - this.totalExpense;
+    },
+    incomes() {
+      return this.items.filter(i => i.isIncome);
+    },
+    totalExpense() {
+      return this.items.reduce((currentTotal, item) => {
+        return item.cost + currentTotal;
+      }, 0);
+    },
+    totalIncome() {
+      return this.incomes.reduce((currentTotal, item) => {
+        return item.cost + currentTotal;
+      }, 0);
+    }
+  },
+  methods: {
+    onClickItem(item) {
+      console.log(item);
     }
   }
 };

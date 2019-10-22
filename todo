@@ -1,0 +1,7 @@
+- edit
+- new item'ı modal yapmak (edit de modal)
+- eklendiği ya da düzenlendiği zaman alert yerine toast mesaj göstermek
+- skleme ve düzenleme yaparken açılan modalları işlem tamamlandığında kapat. işlem tamamlanana kadar butonları disable et
+- silme
+- silerken emin misiniz diye sorup okay derse sil cancel derse silme
+- silmeye basınca eğer onaylarsa ve silme işlemine geçerse butonu disable et işlem bitince düzelt

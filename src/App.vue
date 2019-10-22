@@ -9,10 +9,10 @@
     </v-app-bar>
     <v-content>
       <v-container grid-list-xs>
-        <DataTable v-model="toggle" />
+        <DataTable :items="items" :loading="loading" v-model="toggle" />
       </v-container>
       <v-container grid-list-xs>
-        <NewItem v-model="newOpen" />
+        <NewItem v-model="newOpen" @add="add" />
       </v-container>
     </v-content>
   </v-app>
@@ -25,11 +25,28 @@ import NewItem from "./components/NewItem";
 export default {
   name: "App",
   components: { DataTable, NewItem },
+  beforeMount() {
+    this.loading = true;
+
+    this.dbRef.get().then(querySnapshot => {
+      querySnapshot.forEach(doc => {
+        this.items.push(doc.data());
+      });
+
+      this.loading = false;
+    });
+  },
   data: () => ({
     newOpen: false,
     toggle: true,
-    loading: true
+    loading: false,
+    items: [],
+    dbRef: db.collection("dummy")
   }),
-  methods: {}
+  methods: {
+    add(newItem) {
+      this.items.push(newItem);
+    }
+  }
 };
 </script>
