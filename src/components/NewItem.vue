@@ -10,7 +10,7 @@
           <v-text-field class="pa-6" v-model="newItem.category" name="category" label="Category"></v-text-field>
           <v-text-field class="pa-6" v-model="newItem.desc" name="desc" label="Description"></v-text-field>
           <v-card-actions>
-            <v-checkbox label="Income" v-model="newItem.isIncome"></v-checkbox>
+            <v-switch v-model="newItem.isIncome" label="Income"></v-switch>
             <v-spacer></v-spacer>
             <v-btn @click.stop="sendData" color="primary">Save</v-btn>
           </v-card-actions>
@@ -26,7 +26,6 @@ export default {
   data() {
     return {
       isOpened: false,
-      random: Math.floor(Math.random() * 10000000),
       newItem: {
         name: "",
         cost: null,

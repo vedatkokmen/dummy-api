@@ -2,23 +2,33 @@
   <div>
     <v-container fluid grid-list-xs v-show="!isOpened">
       <v-container class="grey mb-2 lighten-5">
-        <v-row no-gutters>
-          <v-col cols="6">
+        <v-row>
+          <v-col cols="4">
             <v-card>
               <v-card-title primary-title>
                 <div>
                   <h3 class="headline mb-0">Total Income</h3>
-                  <div class="display-1">{{totalIncome}}</div>
+                  <div class="display-2">{{totalIncome}} TL</div>
                 </div>
               </v-card-title>
             </v-card>
           </v-col>
-          <v-col cols="6">
+          <v-col cols="4">
             <v-card>
               <v-card-title primary-title>
                 <div>
                   <h3 class="headline mb-0">Total Expense</h3>
-                  <div class="display-1">{{totalExpense}}</div>
+                  <div class="display-2">{{totalExpense}} TL</div>
+                </div>
+              </v-card-title>
+            </v-card>
+          </v-col>
+          <v-col cols="4">
+            <v-card>
+              <v-card-title primary-title>
+                <div>
+                  <h3 class="headline mb-0">Balance</h3>
+                  <div class="display-2">{{balance}} TL</div>
                 </div>
               </v-card-title>
             </v-card>
@@ -27,17 +37,9 @@
       </v-container>
       <v-data-table :headers="headers" :items="items" class="elevation-1">
         <template slot="items" slot-scope="props">
-          <td class="text-xs-right">
-            <div class="text-center">
-              <v-badge>
-                <template v-slot:badge>0</template>
-              </v-badge>
-            </div>
-            {{ props.item.key }}
-          </td>
+          <td class="text-xs-right">{{ props.item.key }}</td>
         </template>
       </v-data-table>
-      <v-btn @click="getBalance" class="mt-4" color="success">Get Balance</v-btn>
     </v-container>
   </div>
 </template>
@@ -54,7 +56,7 @@ export default {
           sortable: false,
           value: "name"
         },
-        { text: "Cost", value: "cost" },
+        { text: "Cost (TL)", value: "cost" },
         { text: "Category", value: "category" },
         { text: "Description", value: "desc" }
       ],
@@ -62,48 +64,53 @@ export default {
       totalExpense: null,
       totalIncome: null,
       isOpened: false,
-      totalIncome: null,
       expenses: [],
-      incomes: []
+      incomes: [],
+      dbRef: db.collection("dummy")
     };
   },
   methods: {
-    getSum(total, num) {
-      return total + Math.round(num);
+    getIncomes() {
+      this.dbRef
+        .where("isIncome", "==", true)
+        .get()
+        .then(querySnapshot => {
+          querySnapshot.forEach(doc => {
+            this.incomes.push(doc.data());
+          });
+        });
     },
-    getBalance() {
+    totalExpenses() {
       let total = this.items.reduce((currentTotal, item) => {
         return item.cost + currentTotal;
       }, 0);
       this.totalExpense = total;
     },
-    expenseList() {
-      let expenses = this.items.map(item => {
-        return item.isIncome === false;
-        this.expenses = expenses;
-        console.log(expenses);
-      });
-    },
-    incomeList() {
-      let incomes = this.items.map(item => {
-        return item.isIncome === true;
-        this.incomes = incomes;
-        console.log(incomes);
-      });
+    totalIncomes() {
+      let total = this.incomes.reduce((currentTotal, item) => {
+        return item.cost + currentTotal;
+      }, 0);
+      this.totalIncome = total;
     }
   },
   beforeMount() {
-    db.collection("dummy")
-      .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          this.items.push(doc.data());
-        });
+    this.dbRef.get().then(querySnapshot => {
+      querySnapshot.forEach(doc => {
+        this.items.push(doc.data());
       });
+    });
   },
   updated() {
-    this.getBalance();
-    this.expenseList();
+    this.totalExpenses();
+    this.totalIncomes();
+  },
+  created() {
+    this.getIncomes();
+  },
+  computed: {
+    balance() {
+      return this.totalExpense - this.totalIncome;
+    }
   }
 };
 </script>
